@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import json
 
 
 def get_first_news():
@@ -13,12 +14,25 @@ def get_first_news():
     suop = BeautifulSoup(response.text, 'html.parser')
     articles_cards = suop.find_all('div', class_='container-normal container-content')
 
+    news_dict = {}
+
     for article in articles_cards:
         articles = article.find_all('tr', class_='gbnews-listShort')
         for item in articles:
             article_title = item.find('p').get_text(strip=True)
             article_url = url + item.find('a').get('href')
             article_data_time = item.find('div', class_='sub').get_text(strip=True)
+
+            article_id = article_url.split('/')[-1]  # get news id
+
+            news_dict[article_id] = {
+                'article_title': article_title,
+                'article_url': article_url,
+                'article_data_time': article_data_time
+            }
+
+        with open('news_dict.json', 'w', encoding='utf-8') as file:
+            json.dump(news_dict, file, indent=4, ensure_ascii=False)
 
 
 def main():
