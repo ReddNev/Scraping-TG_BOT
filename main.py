@@ -11,6 +11,14 @@ def get_first_news():
     url = 'https://gamebomb.ru/news'
     response = requests.get(url=url, headers=headers)
     suop = BeautifulSoup(response.text, 'html.parser')
+    articles_cards = suop.find_all('div', class_='container-normal container-content')
+
+    for article in articles_cards:
+        articles = article.find_all('tr', class_='gbnews-listShort')
+        for item in articles:
+            article_title = item.find('p').get_text(strip=True)
+            article_url = url + item.find('a').get('href')
+            article_data_time = item.find('div', class_='sub').get_text(strip=True)
 
 
 def main():
