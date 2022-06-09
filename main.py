@@ -19,12 +19,11 @@ def get_first_news():
     for article in articles_cards:
         articles = article.find_all('tr', class_='gbnews-listShort')
         for item in articles:
-            article_title = item.find('p').get_text(strip=True)
-            article_url = url + item.find('a').get('href')
+            article_title = item.find('h3').get_text(strip=True)
+            article_url = item.find('a').get('href')
             article_data_time = item.find('div', class_='sub').get_text(strip=True)
 
             article_id = article_url.split('/')[-1]  # get news id
-
             news_dict[article_id] = {
                 'article_title': article_title,
                 'article_url': article_url,
@@ -52,13 +51,13 @@ def check_news():
     latest_news = {}
 
     for item in articles_cards:
-        article_url = url + item.find('a').get('href')
+        article_url = item.find('a').get('href')
         article_id = article_url.split('/')[-1]
 
         if article_id in news_dict:
             continue
         else:
-            article_title = item.find('p').get_text(strip=True)
+            article_title = item.find('h3').get_text(strip=True)
             article_data_time = item.find('div', class_='sub').get_text(strip=True)
 
             news_dict[article_id] = {
